@@ -1,0 +1,22 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+body {
+  background-color: whitesmoke;
+}
+
+#form-box {
+  display: flex;
+}
+
+#input-group-1 {
+  display: flex;
+  flex: 1;
+}
+
+#input-group-2 {
+  display: flex;
+  flex: 1;
+}
