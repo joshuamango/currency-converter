@@ -12,4 +12,4 @@ Made with:
 
 Link to live site: https://pj68v066l7.codesandbox.io/
 
-View and edit the code here: https://codesandbox.io/s/github/joshuamango/currencty-converter/tree/master/
+[![Edit new](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/joshuamango/currencty-converter/tree/master/)
