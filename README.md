@@ -1,6 +1,6 @@
 # currency-converter
 
-### A simple web application for 
+### A simple web application for converting between currencies
 
 Made with:
 
