@@ -144,9 +144,7 @@ class App extends React.Component {
           let multiplier = values[number];
           output.value =
             symbol +
-            String(
-              (input.value.slice(1, input.value.length) * multiplier).toFixed(2)
-            );
+            Number((input.value.slice(1, input.value.length) * multiplier).toFixed(2)).toLocaleString();
         }
       })
       .catch(function(error) {
