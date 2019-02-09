@@ -1,9 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import InputGroup from "react-bootstrap/InputGroup";
@@ -144,7 +141,9 @@ class App extends React.Component {
           let multiplier = values[number];
           output.value =
             symbol +
-            Number((input.value.slice(1, input.value.length) * multiplier).toFixed(2)).toLocaleString();
+            Number(
+              (input.value.slice(1, input.value.length) * multiplier).toFixed(2)
+            ).toLocaleString();
         }
       })
       .catch(function(error) {
