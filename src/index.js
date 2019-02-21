@@ -89,6 +89,7 @@ class App extends React.Component {
                 </DropdownButton>
                 <FormControl
                   id="input-2"
+                  autoComplete="off"
                   placeholder={this.state.toSymbol + "0.00"}
                 />
               </InputGroup>
