@@ -5,6 +5,9 @@ import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
+import Navbar from "react-bootstrap/Navbar";
+import Button from "react-bootstrap/Button";
+
 import "./styles.css";
 
 class App extends React.Component {
@@ -25,7 +28,15 @@ class App extends React.Component {
   render() {
     return (
       <Container className="App">
-        <h1>Currency Converter</h1>
+        <Navbar bg="dark" variant="dark" id="navbar">
+          <Navbar.Brand id="title">Currency Converter</Navbar.Brand>
+          <Button
+            variant="outline-light"
+            href="https://www.github.com/joshuamango/currency-converter/"
+          >
+            About
+          </Button>
+        </Navbar>
         <form onSubmit={this.handleSubmit}>
           <div id="form-box">
             <div id="input-group-1">
@@ -78,12 +89,14 @@ class App extends React.Component {
                 </DropdownButton>
                 <FormControl
                   id="input-2"
+                  autoComplete="off"
                   placeholder={this.state.toSymbol + "0.00"}
                 />
               </InputGroup>
             </div>
           </div>
         </form>
+        {/* Add footer */}
       </Container>
     );
   }
@@ -94,7 +107,6 @@ class App extends React.Component {
     let abbr = ["USD", "EUR", "GBP", "JPY", "CAD", "AUD"];
     let symbols = ["$", "€", "£", "¥", "$", "$"];
     this.setState({
-      // Since array's are zero indexed...
       from: abbr[key - 1],
       fromSymbol: symbols[key - 1]
     });
@@ -107,7 +119,6 @@ class App extends React.Component {
     let abbr = ["USD", "EUR", "GBP", "JPY", "CAD", "AUD"];
     let symbols = ["$", "€", "£", "¥", "$", "$"];
     this.setState({
-      // Since array's are zero indexed...
       to: abbr[key - 1],
       toSymbol: symbols[key - 1]
     });
