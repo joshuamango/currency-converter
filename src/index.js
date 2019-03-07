@@ -10,9 +10,13 @@ import Button from "react-bootstrap/Button";
 
 import "./styles.css";
 
+// The main (and only) component in the application
+// I should probably split it up but yeah...
 class App extends React.Component {
   constructor(props) {
     super(props);
+
+    // Stores the symbols and abbreviations of the selected currencies
     this.state = {
       from: "USD",
       to: "EUR",
@@ -20,12 +24,15 @@ class App extends React.Component {
       toSymbol: "€"
     };
 
+    /* Bind each method in this component the constructors' "this"
+       so that they are able to access the state of the component.*/
     this.handleChoiceTo = this.handleChoiceTo.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChoiceFrom = this.handleChoiceFrom.bind(this);
   }
 
   render() {
+    // This return statement contains everything that is displayed on the page.
     return (
       <Container className="App">
         <Navbar bg="dark" variant="dark" id="navbar">
@@ -39,6 +46,7 @@ class App extends React.Component {
         </Navbar>
         <form onSubmit={this.handleSubmit}>
           <div id="form-box">
+            {/* Left text input*/}
             <div id="input-group-1">
               <InputGroup>
                 <DropdownButton
@@ -67,6 +75,7 @@ class App extends React.Component {
                 />
               </InputGroup>
             </div>
+            {/* Right text input*/}
             <div id="input-group-2">
               <InputGroup>
                 <DropdownButton
@@ -101,6 +110,9 @@ class App extends React.Component {
     );
   }
 
+  /* Invoked when left dropdown selection changes. 
+     Changes state to include new currency abbreviation
+     and it associated symbol. */
   handleChoiceTo(key, evt) {
     const input = document.getElementById("input-1");
     const output = document.getElementById("input-2");
@@ -113,6 +125,9 @@ class App extends React.Component {
     input.value = output.value = "";
   }
 
+  /* Invoked when right dropdown selection changes. 
+     Changes state to include new currency abbreviation
+     and it associated symbol. */
   handleChoiceFrom(key, evt) {
     const input = document.getElementById("input-1");
     const output = document.getElementById("input-2");
@@ -125,31 +140,43 @@ class App extends React.Component {
     input.value = output.value = "";
   }
 
+  // Invoked whenever the text in the left text-field is changed.
   handleSubmit(e) {
     e.preventDefault();
+
+    // Save a reference to each text-field
     const input = document.getElementById("input-1");
     const output = document.getElementById("input-2");
 
+    // Ensures that the symbol in the left text-field is correct
     if (input.value.slice(0, 1) !== this.state.fromSymbol) {
       input.value = this.state.fromSymbol + input.value;
     }
 
+    // Save references to state elements for more concise code
     let from = this.state.from;
     let to = this.state.to;
     let symbol = this.state.toSymbol;
 
+    // Exchange rates API published by the European Central Bank
     const url = "https://api.exchangeratesapi.io/latest?base=" + from;
+
+    // "provides an easy, logical way to fetch resources asynchronously across the network."
     fetch(url)
-      .then(resp => resp.json()) // Transform the data into json
+      .then(resp => resp.json()) // Transforms the response into json
       .then(function(data) {
         if (from === to) {
           output.value = input.value;
         } else {
+          /* This is the main logic of the application. We use the methods Object.keys
+           and Object.values, which return arrays with each key and value from the rates 
+           object in the JSON response. We then obtain from the "values" array the 
+           value of the specific exchange rate the user is requesting. The input number 
+           the user entered is then multiplied by the saved value and the result is placed
+           in the output text-field, along with the proper symbol. */
           let keys = Object.keys(data.rates);
           let values = Object.values(data.rates);
-
-          let number = keys.indexOf(to);
-          let multiplier = values[number];
+          let multiplier = values[keys.indexOf(to)];
           output.value =
             symbol +
             Number(
@@ -163,5 +190,6 @@ class App extends React.Component {
   }
 }
 
+// The app is rendered to the root div in our html file.
 const rootElement = document.getElementById("root");
 ReactDOM.render(<App />, rootElement);
