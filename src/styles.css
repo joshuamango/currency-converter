@@ -1,0 +1,50 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+body {
+  background-color: whitesmoke;
+}
+
+#form-box {
+  display: flex;
+  margin-top: 20px;
+}
+
+#input-group-1 {
+  display: flex;
+  flex: 1;
+}
+
+#input-group-2 {
+  display: flex;
+  flex: 1;
+  margin-left: 10px;
+}
+
+#title {
+  flex: 1;
+  text-align: left;
+}
+
+#title:hover {
+  text-decoration: underline;
+}
+
+#title a {
+  color: inherit;
+}
+
+#navbar {
+  margin-top: 20px;
+}
+
+#footer {
+  display: flex;
+}
+
+#footer-text {
+  flex: 1;
+  color: white;
+}
