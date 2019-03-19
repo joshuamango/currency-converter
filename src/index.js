@@ -22,7 +22,19 @@ class App extends React.Component {
       from: "USD",
       to: "EUR",
       fromSymbol: "$",
-      toSymbol: "€"
+      toSymbol: "€",
+      data: {
+      	labels: [],
+      	datasets: [
+	      	{
+	      		label: "Exchange Rate",
+	      		data: [],
+	      		backgroundColor: ["rgba(130, 130, 130, 0.2)"],
+	      		borderColor: ["rgba(90,90,90,1)"],
+	      		borderWidth: 2
+	      	}
+      	]
+      }
     };
 
     /* Bind each method in this component the constructors' "this"
@@ -30,29 +42,43 @@ class App extends React.Component {
     this.handleChoiceTo = this.handleChoiceTo.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChoiceFrom = this.handleChoiceFrom.bind(this);
+    this.handleGraph = this.handleGraph.bind(this);
+    this.handleLabels = this.handleLabels.bind(this);
+    this.clearLabels = this clearLabels.bind(this);
+
+    const date = new Date()
+    const weekAgo = new Date()
+    weekAgo.setDate(date.getDate() - 7)
+    const year = date.getFullYear()
+    const day = date.getDate()
+    const month = "0" + (date.getMonth() + 1)
+    console.log(`Now: ${year}-${month}-${day}`)
+    console.log(`One week ago: ${weekAgo.getFullYear()}-${"0" + (weekAgo.getMonth() + 1)}-${weekAgo.getDate()}`)
+    let handleLabels = this.handleLabels
+    const url = `https://api.exchangeratesapi.io/history?start_at=${weekAgo.getFullYear()}-${"0" + (weekAgo.getMonth() + 1)}-${weekAgo.getDate()}&end_at=${year}-${month}-${day}&symbols=${this.state.from},${this.state.to}&base=${this.state.from}`
+    fetch(url)
+    	.then(resp => resp.json())
+    	.then(function(data) {
+    		let keys = Object.keys(data.rates);
+    		let values = Object.values(data.rates);
+    		let map = new Map();
+    		for (let i = 0; i < keys.length; i++) {
+    		  map.set(keys[i], values[i])
+    		}
+    		console.log(map)
+    		let sortedMap = new Map([...map.entries()].sort())
+    		sortedMap.forEach(handleLabels)
+
+    	 	console.log(data.rates)
+    	 	
+    	})
+    	  .catch(function(error) {
+    	  	console.log(error)
+    	  })
   }
 
   render() {
-    const data = {
-      labels: [
-        "March 2",
-        "March 3",
-        "March 4",
-        "March 5",
-        "March 6",
-        "March 7"
-      ],
-      datasets: [
-        {
-          label: "Exchange Rate",
-          data: [12, 19, 3, 5, 2, 10],
-          backgroundColor: ["rgba(130, 130, 130, 0.2)"],
-          borderColor: ["rgba(90,90,90,1)"],
-          borderWidth: 2
-        }
-      ]
-    };
-
+  	const data = this.state.data;
     const options = {
       layout: {
         margin: {
@@ -147,6 +173,57 @@ class App extends React.Component {
     );
   }
 
+  componentDidMount() {
+  	this.handleGraph()
+  }
+
+  handleGraph() {
+    const date = new Date()
+    const weekAgo = new Date()
+    weekAgo.setDate(date.getDate() - 7)
+    const year = date.getFullYear()
+    const day = date.getDate()
+    const month = "0" + (date.getMonth() + 1)
+    console.log(`Now: ${year}-${month}-${day}`)
+    console.log(`One week ago: ${weekAgo.getFullYear()}-${"0" + (weekAgo.getMonth() + 1)}-${weekAgo.getDate()}`)
+    let handleLabels = this.handleLabels
+    const url = `https://api.exchangeratesapi.io/history?start_at=${weekAgo.getFullYear()}-${"0" + (weekAgo.getMonth() + 1)}-${weekAgo.getDate()}&end_at=${year}-${month}-${day}&symbols=${this.state.from},${this.state.to}&base=${this.state.from}`
+    fetch(url)
+    	.then(resp => resp.json())
+    	.then(function(data) {
+    		let keys = Object.keys(data.rates);
+    		let values = Object.values(data.rates);
+    		let map = new Map();
+    		for (let i = 0; i < keys.length; i++) {
+    		  map.set(keys[i], values[i])
+    		}
+    		console.log(map)
+    		let sortedMap = new Map([...map.entries()].sort())
+    		sortedMap.forEach(handleLabels)
+
+    	 	console.log(data.rates)
+    	 	
+    	})
+    	  .catch(function(error) {
+    	  	console.log(error)
+    	  })
+    }
+
+  clearLabels() {
+  	this.setState({})
+  	this.state.data.labels = []
+  	this.state.data.datasets[0].data = []
+  }
+  handleLabels(value, key, map) {
+  	this.state.data.labels.push(key)
+  	this.state.data.datasets[0].data.push(value.EUR)
+  	this.setState(prevState => ({
+  		
+  	}))
+  	
+  	
+  }
+
   /* Invoked when left dropdown selection changes. 
      Changes state to include new currency abbreviation
      and it associated symbol. */
@@ -160,6 +237,7 @@ class App extends React.Component {
       fromSymbol: symbols[key - 1]
     });
     input.value = output.value = "";
+    this.handleGraph()
   }
 
   /* Invoked when right dropdown selection changes. 
@@ -175,6 +253,7 @@ class App extends React.Component {
       toSymbol: symbols[key - 1]
     });
     input.value = output.value = "";
+    this.handleGraph()
   }
 
   // Invoked whenever the text in the left text-field is changed.
