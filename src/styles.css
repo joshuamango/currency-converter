@@ -39,6 +39,7 @@ body {
 #navbar {
   margin-top: 20px;
 }
+<<<<<<< HEAD
 
 #footer {
   display: flex;
@@ -48,3 +49,5 @@ body {
   flex: 1;
   color: white;
 }
+=======
+>>>>>>> f4bf36b037cda8ac172751917899f64974010dd2

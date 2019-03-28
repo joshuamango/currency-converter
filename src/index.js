@@ -7,7 +7,10 @@ import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
+<<<<<<< HEAD
 import { Line } from "react-chartjs-2";
+=======
+>>>>>>> f4bf36b037cda8ac172751917899f64974010dd2
 
 import "./styles.css";
 
@@ -22,6 +25,7 @@ class App extends React.Component {
       from: "USD",
       to: "EUR",
       fromSymbol: "$",
+<<<<<<< HEAD
       toSymbol: "€",
       data: {
         labels: [],
@@ -35,6 +39,9 @@ class App extends React.Component {
           }
         ]
       }
+=======
+      toSymbol: "€"
+>>>>>>> f4bf36b037cda8ac172751917899f64974010dd2
     };
 
     /* Bind each method in this component the constructors' "this"
@@ -42,6 +49,7 @@ class App extends React.Component {
     this.handleChoiceTo = this.handleChoiceTo.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChoiceFrom = this.handleChoiceFrom.bind(this);
+<<<<<<< HEAD
     this.handleGraph = this.handleGraph.bind(this);
   }
 
@@ -69,6 +77,11 @@ class App extends React.Component {
       }
     };
 
+=======
+  }
+
+  render() {
+>>>>>>> f4bf36b037cda8ac172751917899f64974010dd2
     // This return statement contains everything that is displayed on the page.
     return (
       <Container className="App">
@@ -107,7 +120,10 @@ class App extends React.Component {
                 <FormControl
                   id="input-1"
                   autoComplete="off"
+<<<<<<< HEAD
                   inputMode="numeric"
+=======
+>>>>>>> f4bf36b037cda8ac172751917899f64974010dd2
                   onChange={this.handleSubmit}
                   placeholder={this.state.fromSymbol + "0.00"}
                 />
@@ -143,9 +159,13 @@ class App extends React.Component {
             </div>
           </div>
         </form>
+<<<<<<< HEAD
         <div style={{ marginTop: "20px" }}>
           <Line data={data} options={options} />
         </div>
+=======
+        {/* Add footer */}
+>>>>>>> f4bf36b037cda8ac172751917899f64974010dd2
       </Container>
     );
   }
@@ -154,6 +174,7 @@ class App extends React.Component {
      Changes state to include new currency abbreviation
      and it associated symbol. */
   handleChoiceTo(key, evt) {
+<<<<<<< HEAD
     let abbr = ["USD", "EUR", "GBP", "JPY", "CAD", "AUD"];
     let symbols = ["$", "€", "£", "¥", "$", "$"];
     this.setState(
@@ -166,12 +187,24 @@ class App extends React.Component {
         this.handleGraph();
       }
     );
+=======
+    const input = document.getElementById("input-1");
+    const output = document.getElementById("input-2");
+    let abbr = ["USD", "EUR", "GBP", "JPY", "CAD", "AUD"];
+    let symbols = ["$", "€", "£", "¥", "$", "$"];
+    this.setState({
+      from: abbr[key - 1],
+      fromSymbol: symbols[key - 1]
+    });
+    input.value = output.value = "";
+>>>>>>> f4bf36b037cda8ac172751917899f64974010dd2
   }
 
   /* Invoked when right dropdown selection changes. 
      Changes state to include new currency abbreviation
      and it associated symbol. */
   handleChoiceFrom(key, evt) {
+<<<<<<< HEAD
     let abbr = ["USD", "EUR", "GBP", "JPY", "CAD", "AUD"];
     let symbols = ["$", "€", "£", "¥", "$", "$"];
     this.setState(
@@ -252,18 +285,39 @@ class App extends React.Component {
     if (e !== " ") {
       e.preventDefault();
     }
+=======
+    const input = document.getElementById("input-1");
+    const output = document.getElementById("input-2");
+    let abbr = ["USD", "EUR", "GBP", "JPY", "CAD", "AUD"];
+    let symbols = ["$", "€", "£", "¥", "$", "$"];
+    this.setState({
+      to: abbr[key - 1],
+      toSymbol: symbols[key - 1]
+    });
+    input.value = output.value = "";
+  }
+
+  // Invoked whenever the text in the left text-field is changed.
+  handleSubmit(e) {
+    e.preventDefault();
+>>>>>>> f4bf36b037cda8ac172751917899f64974010dd2
 
     // Save a reference to each text-field
     const input = document.getElementById("input-1");
     const output = document.getElementById("input-2");
 
     // Ensures that the symbol in the left text-field is correct
+<<<<<<< HEAD
     if (input.value.length === 1 && !isNaN(input.value)) {
       input.value = this.state.fromSymbol + input.value;
     }
     if (input.value.slice(0, 1) !== this.state.fromSymbol) {
       input.value =
         this.state.fromSymbol + input.value.slice(1, input.value.length);
+=======
+    if (input.value.slice(0, 1) !== this.state.fromSymbol) {
+      input.value = this.state.fromSymbol + input.value;
+>>>>>>> f4bf36b037cda8ac172751917899f64974010dd2
     }
 
     // Save references to state elements for more concise code

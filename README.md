@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
@@ -66,3 +67,20 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `npm run build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+=======
+# currency-converter
+
+### A simple web application for converting between currencies
+
+Made with:
+
+- [react](https://github.com/facebook/react)
+- [react-bootstrap](https://github.com/react-bootstrap/react-bootstrap)
+- [exchangeratesapi.io](https://github.com/exchangeratesapi/exchangeratesapi)
+
+![Image](screenshot-updated.png)
+
+Link to live site (hosted on Heroku): https://infinite-beyond-15200.herokuapp.com/
+
+[![Edit currency-converter](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/y0qlqxjvox)
+>>>>>>> f4bf36b037cda8ac172751917899f64974010dd2
