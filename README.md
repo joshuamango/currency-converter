@@ -15,5 +15,5 @@ Made with:
 
 Link to live site (hosted on Heroku): https://infinite-beyond-15200.herokuapp.com/
 
-[![Edit currency-converter](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/y0qlqxjvox)
+[![Edit currency-converter](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/6y92onkrl3?fontsize=14)
 
