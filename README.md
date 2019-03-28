@@ -3,7 +3,7 @@
 
 ### A simple web application for converting between currencies
 
-######This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 Made with:
 
