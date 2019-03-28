@@ -10,6 +10,8 @@ Made with:
 - [react](https://github.com/facebook/react)
 - [react-bootstrap](https://github.com/react-bootstrap/react-bootstrap)
 - [exchangeratesapi.io](https://github.com/exchangeratesapi/exchangeratesapi)
+- [chartjs](https://github.com/chartjs/Chart.js)
+- [react-chartjs-2](https://github.com/jerairrest/react-chartjs-2)
 
 ![Image](screenshot.png)
 
