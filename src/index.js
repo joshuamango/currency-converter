@@ -68,9 +68,8 @@ class App extends React.Component {
         }]
       }
     };
-  }
+  
 
-  render() {
     // This return statement contains everything that is displayed on the page.
     return (
       <Container className="App">
@@ -222,7 +221,7 @@ class App extends React.Component {
 
         while (true) {
           let element = keyIterator.next();
-          if (element.done == true) {
+          if (element.done === true) {
             break;
           } else {
             newKeys.push(element.value);
@@ -231,7 +230,7 @@ class App extends React.Component {
 
         while (true) {
           let element = valueIterator.next();
-          if (element.done == true) {
+          if (element.done === true) {
             break;
           } else {
             newValues.push(element.value);

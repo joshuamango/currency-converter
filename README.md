@@ -11,7 +11,7 @@ Made with:
 - [react-bootstrap](https://github.com/react-bootstrap/react-bootstrap)
 - [exchangeratesapi.io](https://github.com/exchangeratesapi/exchangeratesapi)
 
-![Image](screenshot-updated.png)
+![Image](screenshot.png)
 
 Link to live site (hosted on Heroku): https://infinite-beyond-15200.herokuapp.com/
 
