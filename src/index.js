@@ -24,16 +24,16 @@ class App extends React.Component {
       fromSymbol: "$",
       toSymbol: "€",
       data: {
-      	labels: [],
-      	datasets: [
-	      	{
-	      		label: "Exchange Rate",
-	      		data: [],
-	      		backgroundColor: ["rgba(130, 130, 130, 0.2)"],
-	      		borderColor: ["rgba(90,90,90,1)"],
-	      		borderWidth: 2
-	      	}
-      	]
+        labels: [],
+        datasets: [
+          {
+            label: "Exchange Rate Over Past 7 Days",
+            data: [1, 2, 3, 4, 5],
+            backgroundColor: ["rgba(130, 130, 130, 0.2)"],
+            borderColor: ["rgba(90,90,90,1)"],
+            borderWidth: 2
+          }
+        ]
       }
     };
 
@@ -43,42 +43,10 @@ class App extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChoiceFrom = this.handleChoiceFrom.bind(this);
     this.handleGraph = this.handleGraph.bind(this);
-    this.handleLabels = this.handleLabels.bind(this);
-    this.clearLabels = this clearLabels.bind(this);
-
-    const date = new Date()
-    const weekAgo = new Date()
-    weekAgo.setDate(date.getDate() - 7)
-    const year = date.getFullYear()
-    const day = date.getDate()
-    const month = "0" + (date.getMonth() + 1)
-    console.log(`Now: ${year}-${month}-${day}`)
-    console.log(`One week ago: ${weekAgo.getFullYear()}-${"0" + (weekAgo.getMonth() + 1)}-${weekAgo.getDate()}`)
-    let handleLabels = this.handleLabels
-    const url = `https://api.exchangeratesapi.io/history?start_at=${weekAgo.getFullYear()}-${"0" + (weekAgo.getMonth() + 1)}-${weekAgo.getDate()}&end_at=${year}-${month}-${day}&symbols=${this.state.from},${this.state.to}&base=${this.state.from}`
-    fetch(url)
-    	.then(resp => resp.json())
-    	.then(function(data) {
-    		let keys = Object.keys(data.rates);
-    		let values = Object.values(data.rates);
-    		let map = new Map();
-    		for (let i = 0; i < keys.length; i++) {
-    		  map.set(keys[i], values[i])
-    		}
-    		console.log(map)
-    		let sortedMap = new Map([...map.entries()].sort())
-    		sortedMap.forEach(handleLabels)
-
-    	 	console.log(data.rates)
-    	 	
-    	})
-    	  .catch(function(error) {
-    	  	console.log(error)
-    	  })
   }
 
   render() {
-  	const data = this.state.data;
+    const data = this.state.data;
     const options = {
       layout: {
         margin: {
@@ -90,6 +58,14 @@ class App extends React.Component {
       },
       legend: {
         position: "bottom"
+      },
+      scales: {
+        yAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: `${this.state.from} per 1 ${this.state.to}`
+          }
+        }]
       }
     };
 
@@ -131,6 +107,7 @@ class App extends React.Component {
                 <FormControl
                   id="input-1"
                   autoComplete="off"
+                  inputMode="numeric"
                   onChange={this.handleSubmit}
                   placeholder={this.state.fromSymbol + "0.00"}
                 />
@@ -166,107 +143,127 @@ class App extends React.Component {
             </div>
           </div>
         </form>
-        <div style={{ "margin-top": "20px" }}>
+        <div style={{ marginTop: "20px" }}>
           <Line data={data} options={options} />
         </div>
       </Container>
     );
   }
 
-  componentDidMount() {
-  	this.handleGraph()
-  }
-
-  handleGraph() {
-    const date = new Date()
-    const weekAgo = new Date()
-    weekAgo.setDate(date.getDate() - 7)
-    const year = date.getFullYear()
-    const day = date.getDate()
-    const month = "0" + (date.getMonth() + 1)
-    console.log(`Now: ${year}-${month}-${day}`)
-    console.log(`One week ago: ${weekAgo.getFullYear()}-${"0" + (weekAgo.getMonth() + 1)}-${weekAgo.getDate()}`)
-    let handleLabels = this.handleLabels
-    const url = `https://api.exchangeratesapi.io/history?start_at=${weekAgo.getFullYear()}-${"0" + (weekAgo.getMonth() + 1)}-${weekAgo.getDate()}&end_at=${year}-${month}-${day}&symbols=${this.state.from},${this.state.to}&base=${this.state.from}`
-    fetch(url)
-    	.then(resp => resp.json())
-    	.then(function(data) {
-    		let keys = Object.keys(data.rates);
-    		let values = Object.values(data.rates);
-    		let map = new Map();
-    		for (let i = 0; i < keys.length; i++) {
-    		  map.set(keys[i], values[i])
-    		}
-    		console.log(map)
-    		let sortedMap = new Map([...map.entries()].sort())
-    		sortedMap.forEach(handleLabels)
-
-    	 	console.log(data.rates)
-    	 	
-    	})
-    	  .catch(function(error) {
-    	  	console.log(error)
-    	  })
-    }
-
-  clearLabels() {
-  	this.setState({})
-  	this.state.data.labels = []
-  	this.state.data.datasets[0].data = []
-  }
-  handleLabels(value, key, map) {
-  	this.state.data.labels.push(key)
-  	this.state.data.datasets[0].data.push(value.EUR)
-  	this.setState(prevState => ({
-  		
-  	}))
-  	
-  	
-  }
-
   /* Invoked when left dropdown selection changes. 
      Changes state to include new currency abbreviation
      and it associated symbol. */
   handleChoiceTo(key, evt) {
-    const input = document.getElementById("input-1");
-    const output = document.getElementById("input-2");
     let abbr = ["USD", "EUR", "GBP", "JPY", "CAD", "AUD"];
     let symbols = ["$", "€", "£", "¥", "$", "$"];
-    this.setState({
-      from: abbr[key - 1],
-      fromSymbol: symbols[key - 1]
-    });
-    input.value = output.value = "";
-    this.handleGraph()
+    this.setState(
+      {
+        from: abbr[key - 1],
+        fromSymbol: symbols[key - 1]
+      },
+      () => {
+        this.handleSubmit();
+        this.handleGraph();
+      }
+    );
   }
 
   /* Invoked when right dropdown selection changes. 
      Changes state to include new currency abbreviation
      and it associated symbol. */
   handleChoiceFrom(key, evt) {
-    const input = document.getElementById("input-1");
-    const output = document.getElementById("input-2");
     let abbr = ["USD", "EUR", "GBP", "JPY", "CAD", "AUD"];
     let symbols = ["$", "€", "£", "¥", "$", "$"];
-    this.setState({
-      to: abbr[key - 1],
-      toSymbol: symbols[key - 1]
-    });
-    input.value = output.value = "";
-    this.handleGraph()
+    this.setState(
+      {
+        to: abbr[key - 1],
+        toSymbol: symbols[key - 1]
+      },
+      () => {
+        this.handleSubmit();
+        this.handleGraph();
+      }
+    );
+  }
+
+  handleGraph() {
+    const date = new Date();
+    const weekAgo = new Date();
+    weekAgo.setDate(date.getDate() - 7);
+    const year = date.getFullYear();
+    const day = date.getDate();
+    const month = "0" + (date.getMonth() + 1);
+    const url = `https://api.exchangeratesapi.io/history?start_at=${weekAgo.getFullYear()}-${"0" +
+      (weekAgo.getMonth() +
+        1)}-${weekAgo.getDate()}&end_at=${year}-${month}-${day}&symbols=${
+      this.state.from
+    },${this.state.to}&base=${this.state.from}`;
+
+    let newValues = [];
+    let newKeys = [];
+    let to = this.state.to
+
+    fetch(url)
+      .then(resp => resp.json())
+      .then(function(data) {
+        let keys = Object.keys(data.rates);
+        let values = Object.values(data.rates);
+        let map = new Map();
+        for (let i = 0; i < keys.length; i++) {
+          map.set(keys[i], values[i][to]);
+        }
+
+        map = new Map([...map.entries()].sort());
+        let keyIterator = map.keys();
+        let valueIterator = map.values();
+
+        while (true) {
+          let element = keyIterator.next();
+          if (element.done == true) {
+            break;
+          } else {
+            newKeys.push(element.value);
+          }
+        }
+
+        while (true) {
+          let element = valueIterator.next();
+          if (element.done == true) {
+            break;
+          } else {
+            newValues.push(element.value);
+          }
+        }
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+
+    
+    let currentState = { ...this.state };
+    currentState.data.labels = newKeys;
+    currentState.data.datasets[0].data = newValues
+    
+    console.log(currentState);
   }
 
   // Invoked whenever the text in the left text-field is changed.
-  handleSubmit(e) {
-    e.preventDefault();
+  handleSubmit(e = " ") {
+    if (e !== " ") {
+      e.preventDefault();
+    }
 
     // Save a reference to each text-field
     const input = document.getElementById("input-1");
     const output = document.getElementById("input-2");
 
     // Ensures that the symbol in the left text-field is correct
-    if (input.value.slice(0, 1) !== this.state.fromSymbol) {
+    if (input.value.length === 1 && !isNaN(input.value)) {
       input.value = this.state.fromSymbol + input.value;
+    }
+    if (input.value.slice(0, 1) !== this.state.fromSymbol) {
+      input.value =
+        this.state.fromSymbol + input.value.slice(1, input.value.length);
     }
 
     // Save references to state elements for more concise code
