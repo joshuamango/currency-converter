@@ -7,6 +7,7 @@ import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
+import { Line } from "react-chartjs-2";
 
 import "./styles.css";
 
@@ -21,7 +22,19 @@ class App extends React.Component {
       from: "USD",
       to: "EUR",
       fromSymbol: "$",
-      toSymbol: "€"
+      toSymbol: "€",
+      data: {
+        labels: [],
+        datasets: [
+          {
+            label: "Exchange Rate Over Past 7 Days",
+            data: [1, 2, 3, 4, 5],
+            backgroundColor: ["rgba(130, 130, 130, 0.2)"],
+            borderColor: ["rgba(90,90,90,1)"],
+            borderWidth: 2
+          }
+        ]
+      }
     };
 
     /* Bind each method in this component the constructors' "this"
@@ -29,9 +42,35 @@ class App extends React.Component {
     this.handleChoiceTo = this.handleChoiceTo.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChoiceFrom = this.handleChoiceFrom.bind(this);
+    this.handleGraph = this.handleGraph.bind(this);
   }
 
   render() {
+    const data = this.state.data;
+    const options = {
+      layout: {
+        margin: {
+          left: 0,
+          right: 0,
+          top: 100,
+          bottom: 0
+        }
+      },
+      legend: {
+        position: "bottom"
+      },
+      scales: {
+        yAxes: [
+          {
+            scaleLabel: {
+              display: true,
+              labelString: `${this.state.from} per 1 ${this.state.to}`
+            }
+          }
+        ]
+      }
+    };
+
     // This return statement contains everything that is displayed on the page.
     return (
       <Container className="App">
@@ -70,6 +109,7 @@ class App extends React.Component {
                 <FormControl
                   id="input-1"
                   autoComplete="off"
+                  inputMode="numeric"
                   onChange={this.handleSubmit}
                   placeholder={this.state.fromSymbol + "0.00"}
                 />
@@ -105,6 +145,10 @@ class App extends React.Component {
             </div>
           </div>
         </form>
+        <div style={{ marginTop: "20px" }}>
+          <Line data={data} options={options} />
+        </div>
+        {/* Add footer */}
       </Container>
     );
   }
@@ -113,43 +157,114 @@ class App extends React.Component {
      Changes state to include new currency abbreviation
      and it associated symbol. */
   handleChoiceTo(key, evt) {
-    const input = document.getElementById("input-1");
-    const output = document.getElementById("input-2");
     let abbr = ["USD", "EUR", "GBP", "JPY", "CAD", "AUD"];
     let symbols = ["$", "€", "£", "¥", "$", "$"];
-    this.setState({
-      from: abbr[key - 1],
-      fromSymbol: symbols[key - 1]
-    });
-    input.value = output.value = "";
+    this.setState(
+      {
+        from: abbr[key - 1],
+        fromSymbol: symbols[key - 1]
+      },
+      () => {
+        this.handleSubmit();
+        this.handleGraph();
+      }
+    );
   }
 
   /* Invoked when right dropdown selection changes. 
      Changes state to include new currency abbreviation
      and it associated symbol. */
   handleChoiceFrom(key, evt) {
-    const input = document.getElementById("input-1");
-    const output = document.getElementById("input-2");
     let abbr = ["USD", "EUR", "GBP", "JPY", "CAD", "AUD"];
     let symbols = ["$", "€", "£", "¥", "$", "$"];
-    this.setState({
-      to: abbr[key - 1],
-      toSymbol: symbols[key - 1]
-    });
-    input.value = output.value = "";
+    this.setState(
+      {
+        to: abbr[key - 1],
+        toSymbol: symbols[key - 1]
+      },
+      () => {
+        this.handleSubmit();
+        this.handleGraph();
+      }
+    );
+  }
+
+  handleGraph() {
+    const date = new Date();
+    const weekAgo = new Date();
+    weekAgo.setDate(date.getDate() - 7);
+    const year = date.getFullYear();
+    const day = date.getDate();
+    const month = "0" + (date.getMonth() + 1);
+    const url = `https://api.exchangeratesapi.io/history?start_at=${weekAgo.getFullYear()}-${"0" +
+      (weekAgo.getMonth() +
+        1)}-${weekAgo.getDate()}&end_at=${year}-${month}-${day}&symbols=${
+      this.state.from
+    },${this.state.to}&base=${this.state.from}`;
+
+    let newValues = [];
+    let newKeys = [];
+    let to = this.state.to;
+
+    fetch(url)
+      .then(resp => resp.json())
+      .then(data => {
+        let keys = Object.keys(data.rates);
+        let values = Object.values(data.rates);
+        let map = new Map();
+        for (let i = 0; i < keys.length; i++) {
+          map.set(keys[i], values[i][to]);
+        }
+
+        map = new Map([...map.entries()].sort());
+        let keyIterator = map.keys();
+        let valueIterator = map.values();
+
+        while (true) {
+          let element = keyIterator.next();
+          if (element.done === true) {
+            break;
+          } else {
+            newKeys.push(element.value);
+          }
+        }
+
+        while (true) {
+          let element = valueIterator.next();
+          if (element.done === true) {
+            break;
+          } else {
+            newValues.push(element.value);
+          }
+        }
+
+        let currentState = { ...this.state.data };
+        currentState.labels = newKeys;
+        currentState.datasets[0].data = newValues;
+        this.setState({ data: currentState });
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
   }
 
   // Invoked whenever the text in the left text-field is changed.
-  handleSubmit(e) {
-    e.preventDefault();
+  handleSubmit(e = " ") {
+    if (e !== " ") {
+      e.preventDefault();
+    }
 
     // Save a reference to each text-field
     const input = document.getElementById("input-1");
     const output = document.getElementById("input-2");
 
     // Ensures that the symbol in the left text-field is correct
-    if (input.value.slice(0, 1) !== this.state.fromSymbol) {
+    if (input.value.length === 1 && !isNaN(input.value)) {
       input.value = this.state.fromSymbol + input.value;
+    }
+    if (input.value.slice(0, 1) !== this.state.fromSymbol) {
+      input.value =
+        this.state.fromSymbol + input.value.slice(1, input.value.length);
     }
 
     // Save references to state elements for more concise code

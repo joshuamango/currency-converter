@@ -39,3 +39,12 @@ body {
 #navbar {
   margin-top: 20px;
 }
+
+#footer {
+  display: flex;
+}
+
+#footer-text {
+  flex: 1;
+  color: white;
+}
