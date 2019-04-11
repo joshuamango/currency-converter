@@ -7,6 +7,11 @@ body {
   background-color: whitesmoke;
 }
 
+#palette {
+  color: white;
+  font-size: 30px;
+}
+
 #form-box {
   display: flex;
   margin-top: 20px;
